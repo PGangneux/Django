@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from monApp.models import Produit
+from monApp.models import *
 
 
 def home(request, param=None):
@@ -22,5 +22,22 @@ def ListProduits(request):
     html = "<ul> "
     for prod in prdts:
         html += "<li>" +  prod.intituleProd + "</li>"
+    html += "</ul>"
+    return HttpResponse(html)
+
+
+def ListCategorie(request):
+    categories = Categorie.objects.all()
+    html = "<ul> "
+    for categorie in categories:
+        html += "<li>" +  categorie.nomCat + "</li>"
+    html += "</ul>"
+    return HttpResponse(html)
+
+def ListStatuts(request):
+    statuts = Statut.objects.all()
+    html = "<ul> "
+    for stat in statuts:
+        html += "<li>" +  stat.libelle + "</li>"
     html += "</ul>"
     return HttpResponse(html)
