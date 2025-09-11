@@ -1,43 +1,39 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseNotFound, JsonResponse
 
 from monApp.models import *
 
 
-def home(request, param=None):
-    if param:
-        return HttpResponse(f"<h1>Hello Django!</h1><p>Bonjour {param}</p>")
-    else:
-        return HttpResponse("<h1>Hello Django!</h1>")
+def home(request):
+    if request.GET and request.GET["test"]:
+        raise Http404
+    return HttpResponse("Bonjour Monde!")
 
 def contact(request):
-    return HttpResponse("<h1>contact us</h1>")
+    return render(request, 'monApp/contact.html')
 
 def aboutUs(request):
-    return HttpResponse("<h1>about us</h1>")
+    return render(request, 'monApp/about_us.html')
 
 
 def ListProduits(request):
     prdts = Produit.objects.all()
-    html = "<ul> "
-    for prod in prdts:
-        html += "<li>" +  prod.intituleProd + "</li>"
-    html += "</ul>"
-    return HttpResponse(html)
-
+    return render(request, 'monApp/list_produits.html',{'prdts': prdts})
 
 def ListCategorie(request):
     categories = Categorie.objects.all()
-    html = "<ul> "
-    for categorie in categories:
-        html += "<li>" +  categorie.nomCat + "</li>"
-    html += "</ul>"
-    return HttpResponse(html)
+    return render(request, 'monApp/list_categories.html',{'categories': categories})
 
 def ListStatuts(request):
     statuts = Statut.objects.all()
-    html = "<ul> "
-    for stat in statuts:
-        html += "<li>" +  stat.libelle + "</li>"
-    html += "</ul>"
-    return HttpResponse(html)
+    return render(request, 'monApp/list_statuts.html',{'statuts': statuts})
+
+def ListRayons(request):
+    rayons = Rayon.objects.all()
+    return render(request, 'monApp/list_rayons.html',{'rayons': rayons})
+
+def accueil(request,param):
+    return HttpResponse("<h1>Hello " + param + " ! You're connected</h1>")
+
+def ma_vue(request):
+    return JsonResponse({'foo': 'bar'})

@@ -33,7 +33,7 @@ set_Produit_offline.short_description = "Mettre hors ligne"
 
 class ProduitAdmin(admin.ModelAdmin):
     model = Produit
-    list_display = ["refProd", "intituleProd", "prixUnitaireProd", "dateFabProd", "categorie", "status"]
+    list_display = ["refProd", "intituleProd", "prixUnitaireProd", "dateFabProd", "categorie", "status", "prixTTCProd"]
     list_editable = ["intituleProd", "prixUnitaireProd"]
     radio_fields = {"status": admin.VERTICAL}
     search_fields = ('intituleProd', 'dateFabProd')
