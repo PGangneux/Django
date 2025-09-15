@@ -1,12 +1,17 @@
 from django.urls import path
 from . import views
+from django.views.generic import  *
+
 
 urlpatterns = [
     #path('home/<param>',views.home ,name='home'),
-    path('home/',views.home ,name='home'),
-    path("contact/", views.contact, name="contact"),
-    path("aboutUs/", views.aboutUs, name="aboutUs"),
-    path("produits/", views.ListProduits, name="produits"),
+    #path('home/',views.home ,name='home'),
+    path('home/<param>',views.HomeView.as_view()),
+    path("home/", views.HomeView.as_view()),
+    path("contact/", views.Contact.as_view()),
+    path("aboutUs/", views.AboutView.as_view()),
+    path("produits/",views.ProduitListView.as_view()),
+    path("produit/<pk>/",views.ProduitDetailView.as_view()),
     path("categories/", views.ListCategorie, name="categories"),
     path("statuts/", views.ListStatuts, name="statuts"),
     path('accueil/<param>',views.accueil ,name='accueil'),
