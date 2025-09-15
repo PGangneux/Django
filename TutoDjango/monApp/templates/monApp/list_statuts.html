@@ -1,13 +1,22 @@
-<html>
-<head>
-    <title>Mon app DJANGO</title>
-</head>
-<body>
-    <h1>Hello mes statuts !</h1>
-    <p>Mes statuts sont :</p>
-    <ul>
-        {% for stat in statuts %}
-        <li>{{ stat.libelleStatus }}</li>
-        {% endfor %}
-    </ul>
-</body>
+{% extends 'monApp/base.html' %}
+
+{% block menu %}
+    <h1>Liste des status</h1>
+{% endblock %}
+
+{% block contenu %}
+    <table class="table">
+        <thead>
+            <th>Id</th>
+            <th>Libelle status</th>
+        </thead>
+            <tbody>
+                {% for stat in statuts %}
+                <tr>
+                    <td>{{ stat.idStatus }} </td>
+                    <td>{{ stat.libelleStatus }} </td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
