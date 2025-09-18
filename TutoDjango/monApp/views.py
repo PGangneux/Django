@@ -62,19 +62,71 @@ class ProduitDetailView(DetailView):
         context = super(ProduitDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du produit"
         return context
+    
+
+class CategorieListView(ListView):
+    model = Categorie
+    template_name = "monApp/list_categories.html"
+    context_object_name = "categories"
+
+    def get_queryset(self ) :
+        return Categorie.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super(CategorieListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes catégories"
+        return context
 
 
-def ListCategorie(request):
-    categories = Categorie.objects.all()
-    return render(request, 'monApp/list_categories.html',{'categories': categories})
+class CategorieDetailView(DetailView):
+    model = Categorie
+    template_name = "monApp/detail_categorie.html"
+    context_object_name = "categorie"
+    
+    def get_context_data(self, **kwargs):
+        context = super(CategorieDetailView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Détail de la catégorie"
+        return context
 
-def ListStatuts(request):
-    statuts = Statut.objects.all()
-    return render(request, 'monApp/list_statuts.html',{'statuts': statuts})
 
-def ListRayons(request):
-    rayons = Rayon.objects.all()
-    return render(request, 'monApp/list_rayons.html',{'rayons': rayons})
+
+class StatusListView(ListView):
+    model = Statut
+    template_name = "monApp/list_statuts.html"
+    context_object_name = "statuts"
+
+    def get_queryset(self ) :
+        return Statut.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super(StatusListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes statuts"
+        return context
+
+
+class RayonsListView(ListView):
+    model = Rayon
+    template_name = "monApp/list_rayons.html"
+    context_object_name = "rayons"
+
+    def get_queryset(self ) :
+        return Rayon.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super(RayonsListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes rayons"
+        return context
+    
+class RayonDetailView(DetailView):
+    model = Categorie
+    template_name = "monApp/detail_rayon.html"
+    context_object_name = "rayon"
+    
+    def get_context_data(self, **kwargs):
+        context = super(RayonDetailView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Détail du rayon"
+        return context
+
 
 def accueil(request,param):
     return HttpResponse("<h1>Hello " + param + " ! You're connected</h1>")

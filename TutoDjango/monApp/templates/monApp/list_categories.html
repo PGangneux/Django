@@ -12,10 +12,10 @@
         </thead>
             <tbody>
                 {% for categorie in categories %}
-                <tr>
-                    <td>{{ categorie.idCat }} </td>
-                    <td>{{ categorie.nomCat }} </td>
-                </tr>
+                    <tr>
+                        <td>{{ categorie.idCat }} </td>
+                        <td><a href="{% url 'dtl_cats' categorie.idCat %}">{{ categorie.nomCat }}</a> </td>
+                    </tr>
                 {% endfor %}
         </tbody>
     </table>
