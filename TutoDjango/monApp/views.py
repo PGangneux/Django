@@ -1,7 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.generic import  *
+from monApp.forms import ContactUsForm
 from monApp.models import *
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+
 
 
 class HomeView(TemplateView):
@@ -16,17 +22,35 @@ class HomeView(TemplateView):
 
     def post(self, request, **kwargs):
         return render(request, self.template_name)
+    
 
-class Contact(TemplateView):
-    template_name = "monApp/page_home.html"
+def ContactView(request):
+    titreh1 = "Contact us !"
+    if request.method=='POST':
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            send_mail(
+                subject=f'Message from {form.cleaned_data["name"] or "anonyme"} via TutoDjango Contact form',
+                message=form.cleaned_data['message'],
+                from_email=form.cleaned_data['email'],
+                recipient_list=['admin@monApp.com'],
+            )
+            return redirect('email-sent')
+    else:
+        form = ContactUsForm()
+    return render(request, "monApp/page_home.html",{'titreh1':titreh1, 'form':form})
+
+
+class EmailSent(TemplateView):
+    template_name = "monApp/email_sent.html"
 
     def get_context_data(self, **kwargs):
-        context = super(Contact, self).get_context_data(**kwargs)
-        context['titreh1'] = "Contact"
+        context = super(EmailSent, self).get_context_data(**kwargs)
         return context
     
     def post(self, request, **kwargs):
         return render(request, self.template_name)
+
 
 class AboutView(TemplateView):
     template_name = "monApp/page_home.html"
@@ -102,6 +126,16 @@ class StatusListView(ListView):
         context = super(StatusListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes statuts"
         return context
+    
+class StatutDetailView(DetailView):
+    model = Statut
+    template_name = "monApp/detail_statut.html"
+    context_object_name = "statut"
+    
+    def get_context_data(self, **kwargs):
+        context = super(StatutDetailView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Détail du statut"
+        return context
 
 
 class RayonsListView(ListView):
@@ -118,7 +152,7 @@ class RayonsListView(ListView):
         return context
     
 class RayonDetailView(DetailView):
-    model = Categorie
+    model = Rayon
     template_name = "monApp/detail_rayon.html"
     context_object_name = "rayon"
     
@@ -133,3 +167,36 @@ def accueil(request,param):
 
 def ma_vue(request):
     return JsonResponse({'foo': 'bar'})
+
+
+
+class ConnectView(LoginView):
+    template_name = 'monApp/page_login.html'
+    def post(self, request, **kwargs):
+        lgn = request.POST.get('username', False)
+        pswrd = request.POST.get('password', False)
+        user = authenticate(username=lgn, password=pswrd)
+        if user is not None and user.is_active:
+            login(request, user)
+            return render(request, 'monApp/page_home.html', {'param': lgn, 'message': "You're connected"})
+        else:
+            return render(request, 'monApp/page_register.html')
+        
+class RegisterView(TemplateView):
+    template_name = 'monApp/page_register.html'
+    def post(self, request, **kwargs):
+        username = request.POST.get('username', False)
+        mail = request.POST.get('mail', False)
+        password = request.POST.get('password', False)
+        user = User.objects.create_user(username, mail, password)
+        user.save()
+        if user is not None and user.is_active:
+            return render(request, 'monApp/page_login.html')
+        else:
+            return render(request, 'monApp/page_register.html')
+        
+class DisconnectView(TemplateView):
+    template_name = 'monApp/page_logout.html'
+    def get(self, request, **kwargs):
+        logout(request)
+        return render(request, self.template_name)

@@ -14,7 +14,7 @@
                 {% for rayon in rayons %}
                 <tr>
                     <td>{{ rayon.idRayon }} </td>
-                    <td>{{ rayon.nomRayon }} </td>
+                    <td><a href="{% url 'dtl_rayon' rayon.idRayon %}">{{ rayon.nomRayon }}</a> </td>
                 </tr>
                 {% endfor %}
         </tbody>

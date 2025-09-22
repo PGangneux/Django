@@ -14,31 +14,56 @@
 
     <body>
         {% block nav %}
-            <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'lst_prdts' %}">Produits</a>
-                            <a class="nav-link" href="{% url 'lst_cats' %}">Catégories</a>
-                            <a class="nav-link" href="{% url 'lst_statuts' %}">Status</a>
-                            <a class="nav-link" href="{% url 'lst_rayons' %}">Rayons</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav >
-            {% block menu %}{% endblock %}
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lst_prdts' %}">Produits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lst_cats' %}">Catégories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lst_statuts' %}">Status</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lst_rayons' %}">Rayons</a>
+                    </li>
+                </ul>
+            </div>
+
+            {% if user.is_authenticated %}
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Déconnexion</a>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Inscription</a>
+                    </li>
+                </ul>
+            {% endif %}
+        </nav>
+        {% block menu %}{% endblock %}
         {% endblock %}
+
         <main role="main" class="container top-pushed">
             <div class="jumbotron">
-                {% block contenu %}
-                {% endblock %}
+                {% block contenu %}{% endblock %}
             </div>
-        </main >
+        </main>
 
         <footer class="footer">
             <div class="container">
-                <p>&copy; Copyright {% now "Y" %} by Titof Produition Copyrigh (c)</p>
+                <p>&copy; Copyright {% now "Y" %} by Titof Production</p>
             </div>
         </footer>
     </body>
+
 </html>
+
