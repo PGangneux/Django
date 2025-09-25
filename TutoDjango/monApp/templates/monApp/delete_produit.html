@@ -1,0 +1,10 @@
+{% extends 'monApp/base.html' %}
+{% block contenu %}
+<h1> Voulez-vous vraiment supprimer ce produit ? </h1>
+<form action="" method="post" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success mt-2">oui</button>
+    <button type="submit" class="btn btn-success mt-2">non</button>
+</form>
+{% endblock %}

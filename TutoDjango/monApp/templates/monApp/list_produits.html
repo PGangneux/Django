@@ -23,10 +23,13 @@
                     <td>{{ prdt.dateFabProd }} </td>
                     <td>{{ prdt.categorie }} </td>
                     <td>{{ prdt.status }} </td>
+                    <td><a href="{% url 'prdt_chng' prdt.refProd %}">modifier</a></td>
+                    <td><a href="{% url 'prdt_del' prdt.refProd %}">supprimer</a></td>
                 </tr>
                 {% endfor %}
         </tbody>
     </table>
+    <a href="{% url 'crt_prdt' %}">Créer un nouveau produit</a>
     <p>
     J'ai
     {% if prdts|length < 5 %}

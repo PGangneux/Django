@@ -1,7 +1,8 @@
+from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.generic import  *
-from monApp.forms import ContactUsForm
+from monApp.forms import ContactUsForm, ProduitForm
 from monApp.models import *
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
@@ -86,7 +87,33 @@ class ProduitDetailView(DetailView):
         context = super(ProduitDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du produit"
         return context
+
+class ProduitCreateView(CreateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/create_produit.html"
     
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('dtl_prdt', prdt.refProd) 
+
+class ProduitUpdateView(UpdateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/update_produit.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('dtl_prdt', prdt.refProd)
+    
+class ProduitDeleteView(DeleteView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/delete_produit.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        print(form)
+        return redirect('lst_prdts')
 
 class CategorieListView(ListView):
     model = Categorie
