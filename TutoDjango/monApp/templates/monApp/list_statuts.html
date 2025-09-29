@@ -9,14 +9,19 @@
         <thead>
             <th>Id</th>
             <th>Libelle status</th>
+            <th>Nombre de Produits</th>
         </thead>
             <tbody>
                 {% for stat in statuts %}
                 <tr>
                     <td>{{ stat.idStatus }} </td>
                     <td><a href="{% url 'dtl_statut' stat.idStatus %}">{{ stat.libelleStatus }}</a> </td>
+                    <td>{{ stat.nb_produits }} </td>
+                    <td><a href="{% url 'statut_chng' stat.idStatus %}">modifier</a></td>
+                    <td><a href="{% url 'statut_del' stat.idStatus %}">supprimer</a></td>
                 </tr>
                 {% endfor %}
         </tbody>
     </table>
+    <a href="{% url 'crt_statut' %}">Créer un nouveau status</a>
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends 'monApp/base.html' %}
 {% block contenu %}
-<h1> Suppression d'un produit </h1>
+<h1> Suppression d'un status </h1>
 <form action="" method="post" >
 {% csrf_token %}
-<p>Etes-vous sûr de vouloir supprimer le produit {{ object.intituleProd }} ?</p>
+<p>Etes-vous sûr de vouloir supprimer le status {{ object.libelleStatus }} ?</p>
 <button type="submit" class="btn btn-success mt-2">Confirmer</button>
 </form>
 {% endblock %}

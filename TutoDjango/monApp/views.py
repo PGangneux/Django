@@ -1,13 +1,17 @@
+from itertools import count
 from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseNotFound, JsonResponse
+from django.urls import reverse_lazy
 from django.views.generic import  *
-from monApp.forms import ContactUsForm, ProduitForm
+from monApp.forms import CategorieForm, ContactUsForm, ProduitForm, RayonForm, StatutForm
 from monApp.models import *
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.db.models import Count
+
 
 
 
@@ -106,23 +110,22 @@ class ProduitUpdateView(UpdateView):
         prdt = form.save()
         return redirect('dtl_prdt', prdt.refProd)
     
+    
 class ProduitDeleteView(DeleteView):
     model = Produit
-    form_class=ProduitForm
     template_name = "monApp/delete_produit.html"
+    success_url = reverse_lazy('lst_prdts')
 
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        print(form)
-        return redirect('lst_prdts')
 
 class CategorieListView(ListView):
     model = Categorie
     template_name = "monApp/list_categories.html"
     context_object_name = "categories"
 
-    def get_queryset(self ) :
-        return Categorie.objects.all()
-    
+    def get_queryset(self):
+        # Annoter chaque catégorie avec le nombre de produits liés
+        return Categorie.objects.annotate(nb_produits=Count('produits_categorie'))
+        
     def get_context_data(self, **kwargs):
         context = super(CategorieListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes catégories"
@@ -133,12 +136,41 @@ class CategorieDetailView(DetailView):
     model = Categorie
     template_name = "monApp/detail_categorie.html"
     context_object_name = "categorie"
-    
+
+    def get_queryset(self):
+        # Annoter chaque catégorie avec le nombre de produits liés
+        return Categorie.objects.annotate(nb_produits=Count('produits_categorie'))
+            
     def get_context_data(self, **kwargs):
         context = super(CategorieDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail de la catégorie"
+        context['prdts'] = self.object.produits_categorie.all()
         return context
 
+class CategorieCreateView(CreateView):
+    model = Categorie
+    form_class=CategorieForm
+    template_name = "monApp/create_categorie.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        cats = form.save()
+        return redirect('dtl_cats', cats.idCat) 
+
+
+class CategorieUpdateView(UpdateView):
+    model = Categorie
+    form_class=CategorieForm
+    template_name = "monApp/update_categorie.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        cat = form.save()
+        return redirect('dtl_cats', cat.idCat)
+    
+
+class CategorieDeleteView(DeleteView):
+    model = Categorie
+    template_name = "monApp/delete_categorie.html"
+    success_url = reverse_lazy('lst_cats')
 
 
 class StatusListView(ListView):
@@ -146,8 +178,9 @@ class StatusListView(ListView):
     template_name = "monApp/list_statuts.html"
     context_object_name = "statuts"
 
-    def get_queryset(self ) :
-        return Statut.objects.all()
+    def get_queryset(self):
+        # Annoter chaque catégorie avec le nombre de produits liés
+        return Statut.objects.annotate(nb_produits=Count('produits_status'))
     
     def get_context_data(self, **kwargs):
         context = super(StatusListView, self).get_context_data(**kwargs)
@@ -158,11 +191,41 @@ class StatutDetailView(DetailView):
     model = Statut
     template_name = "monApp/detail_statut.html"
     context_object_name = "statut"
+
+    def get_queryset(self):
+        # Annoter chaque catégorie avec le nombre de produits liés
+        return Statut.objects.annotate(nb_produits=Count('produits_status'))
     
     def get_context_data(self, **kwargs):
         context = super(StatutDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du statut"
+        context['prdts'] = self.object.produits_status.all()
         return context
+    
+
+class StatutCreateView(CreateView):
+    model = Statut
+    form_class=StatutForm
+    template_name = "monApp/create_statut.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        statut = form.save()
+        return redirect('dtl_statut', statut.idStatus) 
+    
+class StatutUpdateView(UpdateView):
+    model = Statut
+    form_class=StatutForm
+    template_name = "monApp/update_statut.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        statut = form.save()
+        return redirect('dtl_statut', statut.idStatus)
+    
+
+class StatutDeleteView(DeleteView):
+    model = Statut
+    template_name = "monApp/delete_statut.html"
+    success_url = reverse_lazy('lst_statuts')
 
 
 class RayonsListView(ListView):
@@ -187,6 +250,32 @@ class RayonDetailView(DetailView):
         context = super(RayonDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du rayon"
         return context
+
+
+class RayonCreateView(CreateView):
+    model = Rayon
+    form_class=RayonForm
+    template_name = "monApp/create_rayon.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        rayon = form.save()
+        return redirect('dtl_rayon', rayon.idRayon) 
+    
+
+class RayonUpdateView(UpdateView):
+    model = Rayon
+    form_class=RayonForm
+    template_name = "monApp/update_rayon.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        rayon = form.save()
+        return redirect('dtl_rayon', rayon.idRayon)
+    
+class RayonDeleteView(DeleteView):
+    model = Rayon
+    template_name = "monApp/delete_rayon.html"
+    success_url = reverse_lazy('lst_rayons')
+
 
 
 def accueil(request,param):

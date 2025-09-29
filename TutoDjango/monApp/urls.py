@@ -22,12 +22,21 @@ urlpatterns = [
 
     path("categories/", views.CategorieListView.as_view(), name="lst_cats"),
     path("categorie/<pk>/" ,views.CategorieDetailView.as_view(), name="dtl_cats"),
+    path("categorie/",views.CategorieCreateView.as_view(), name="crt_cats"),
+    path("categorie/<pk>/update/",views.CategorieUpdateView.as_view(), name="cats_chng"),
+    path("categorie/<pk>/delete/",views.CategorieDeleteView.as_view(), name="cats_del"),
 
     path("statuts/", views.StatusListView.as_view(), name="lst_statuts"),
     path("statut/<pk>/", views.StatutDetailView.as_view(), name="dtl_statut"),
+    path("statut/",views.StatutCreateView.as_view(), name="crt_statut"),
+    path("statut/<pk>/update/",views.StatutUpdateView.as_view(), name="statut_chng"),
+    path("statut/<pk>/delete/",views.StatutDeleteView.as_view(), name="statut_del"),
 
     path('rayons/',views.RayonsListView.as_view() ,name='lst_rayons'),
     path('rayon/<pk>',views.RayonDetailView.as_view() ,name='dtl_rayon'),
+    path("rayon/",views.RayonCreateView.as_view(), name="crt_rayon"),
+    path("rayon/<pk>/update/",views.RayonUpdateView.as_view(), name="rayon_chng"),
+    path("rayon/<pk>/delete/",views.RayonDeleteView.as_view(), name="rayon_del"),
 
     path('accueil/<param>',views.accueil ,name='accueil'),
 

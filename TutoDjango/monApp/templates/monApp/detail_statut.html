@@ -3,9 +3,51 @@
     <h1>{{titremenu}}</h1>
 {% endblock %}
 {% block contenu %}
-    <h2>{{ statut.libelleStatus }}</h2>
-    <ul>
-        <li>id status : {{statut.idStatus }} </li>
-    </ul>
-    <a href="{% url 'lst_statuts' %}">Retour à la liste des status</a>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Détail du status</h4>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ statut.libelleStatus }}</h5>
+        <ul class="list-unstyled">
+            <li><strong>Référence :</strong> {{ statut.idStatus }}</li>
+            <li><strong>Nom status :</strong> {{ statut.libelleStatus }}</li>
+        </ul>
+        <div class="car-footer text-center">
+            <a href="{% url 'statut_chng' statut.idStatus %}">modifier</a>
+            <a href="{% url 'statut_del' statut.idStatus %}">supprimer</a>
+            <a href="{% url 'lst_statuts' %}">Retour à la liste des status</a>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Cette catégorie contient <strong>{{ statut.nb_produits }}</strong> produit(s)</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% if prdts %}
+                {% for prdt in prdts %}
+                    <div class="col-sm-3">
+                        <div class="card mb-2 text-center">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title">{{ prdt.intituleProd }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <a href="{% url 'dtl_prdt' prdt.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">Aucun produit trouvé pour cette catégorie.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+
+
+
