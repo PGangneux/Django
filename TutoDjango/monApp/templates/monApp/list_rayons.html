@@ -9,17 +9,29 @@
         <thead>
             <th>Id</th>
             <th>Nom rayons</th>
+            <th>Valeur marchande du rayon</th>
         </thead>
-            <tbody>
-                {% for rayon in rayons %}
-                <tr>
-                    <td>{{ rayon.idRayon }} </td>
-                    <td><a href="{% url 'dtl_rayon' rayon.idRayon %}">{{ rayon.nomRayon }}</a> </td>
-                    <td><a href="{% url 'rayon_chng' rayon.idRayon %}">modifier</a></td>
-                    <td><a href="{% url 'rayon_del' rayon.idRayon %}">supprimer</a></td>
-                </tr>
-                {% endfor %}
+        <tbody>
+        {% for data in ryns_dt %}
+            <tr>
+                <td><a href="{% url 'dtl_rayon' data.rayon.idRayon %}">{{ data.rayon.idRayon }}</a></td>
+                <td>{{ data.rayon.nomRayon }} </td>
+                <td>{{ data.total_stock }} €</td>
+                <td>
+                    <a href="{% url 'dtl_rayon' data.rayon.idRayon %}" class="btn btn-primary mt-2">Détails</a>
+                    <a href="{% url 'rayon_chng' data.rayon.idRayon %}" class="btn btn-warning mt-2">Modifier</a>
+                    <a href="{% url 'rayon_del' data.rayon.idRayon %}" class="btn btn-danger mt-2">Supprimer</a>
+                </td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
     <a href="{% url 'crt_rayon' %}">Créer un nouveau rayon</a>
+    <!-- Barre de recherche -->
+    <p class="lead mb-3 ml-0">Rechercher un élément...</p>
+    <form method="GET" action="">
+        <input class="form-control" type="text" name="search" placeholder="Tapez ici votre recherche"
+        value="{{ request.GET.search }}">
+        <button type="submit" class="btn btn-success mt-2">Rechercher</button>
+    </form>
 {% endblock %}
