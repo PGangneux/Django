@@ -33,6 +33,7 @@
                                     <li>Total : {{ data.total_produit}} €</li>
                                 </ul>
                                 <a href="{% url 'dtl_prdt' data.produit.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                                <a href="{% url 'cntnr_chng' data.rayon.idRayon data.produit.refProd %}" class="btn btn-primary mt-2">Quantité</a>
                             </div>
                         </div>
                     </div>

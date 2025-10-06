@@ -1,6 +1,6 @@
 from itertools import count
 from django.forms import BaseModelForm
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import Http404, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import  *
@@ -353,12 +353,40 @@ class RayonDeleteView(DeleteView):
 @method_decorator(login_required, name='dispatch')
 class ContenirCreateView(CreateView):
     model = Contenir
-    form_class=ContenirForm
+    form_class = ContenirForm
     template_name = "monApp/create_contenir.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        rayon = get_object_or_404(Rayon, pk=self.kwargs['pk'])
+        context['rayon'] = rayon
+        return context
+
+    def form_valid(self, form):
+        rayon = get_object_or_404(Rayon, pk=self.kwargs['pk'])
+        contenir = form.save(commit=False)
+        contenir.rayon = rayon
+        qte =  self.object.contenir_rayon.all()
+            
+        contenir.save()
+        return redirect('dtl_rayon', pk=rayon.idRayon)
     
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        rayon = form.save()
-        return redirect('dtl_rayon', rayon.idRayon)
+    
+@method_decorator(login_required, name='dispatch')
+class ContenirUpdateView(UpdateView):
+    model = Contenir
+    form_class = ContenirForm
+    template_name = "monApp/update_contenir.html"
+
+    def form_valid(self, form):
+        rayon = get_object_or_404(Rayon, pk=self.kwargs['pkR'])
+        produit = get_object_or_404(Produit, pk=self.kwargs['pkP'])
+        contenir = form.save(commit=False)
+        contenir.produit = produit
+        contenir.rayon = rayon
+        contenir.save()
+        return redirect('dtl_rayon', pk=rayon.idRayon)
+
 
 
 def accueil(request,param):

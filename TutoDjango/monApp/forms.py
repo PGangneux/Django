@@ -1,6 +1,6 @@
 from django import forms
 
-from monApp.models import Categorie, Produit, Rayon, Statut
+from monApp.models import Categorie, Contenir, Produit, Rayon, Statut
 
 
 class ContactUsForm(forms.Form):
@@ -31,5 +31,5 @@ class RayonForm(forms.ModelForm):
 
 class ContenirForm(forms.ModelForm):
     class Meta:
-        model = Rayon
+        model = Contenir
         exclude = ('rayon',)
