@@ -38,8 +38,8 @@ urlpatterns = [
     path("rayon/<pk>/update/",views.RayonUpdateView.as_view(), name="rayon_chng"),
     path("rayon/<pk>/delete/",views.RayonDeleteView.as_view(), name="rayon_del"),
     path("rayon/<pk>/cntnr/", views.ContenirCreateView.as_view(), name='cntnr_crt'),
-    path("rayon/<pkR>/produit/<pkP>/update/", views.ContenirUpdateView.as_view(), name='cntnr_chng'),
-
+    path("rayon/<pkR>/produit/<pk>/update/", views.ContenirUpdateView.as_view(), name='cntnr_chng'),
+    path("rayon/<pkR>/produit/<pk>/delete/", views.ContenirDeleteView.as_view(), name='cntnr_del'),
 
     path('accueil/<param>',views.accueil ,name='accueil'),
 

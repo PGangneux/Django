@@ -366,9 +366,18 @@ class ContenirCreateView(CreateView):
         rayon = get_object_or_404(Rayon, pk=self.kwargs['pk'])
         contenir = form.save(commit=False)
         contenir.rayon = rayon
-        qte =  self.object.contenir_rayon.all()
-            
-        contenir.save()
+
+        existing = Contenir.objects.filter(
+            rayon_id=contenir.rayon_id,
+            produit=contenir.produit
+        ).first()
+        
+        if existing:
+            existing.Qte = contenir.Qte
+            existing.save()
+
+        else:  
+            contenir.save()
         return redirect('dtl_rayon', pk=rayon.idRayon)
     
     
@@ -378,14 +387,42 @@ class ContenirUpdateView(UpdateView):
     form_class = ContenirForm
     template_name = "monApp/update_contenir.html"
 
+    def get_object(self, queryset=None):
+        # On récupère le Contenir à partir du couple (rayon, produit)
+        rayon = get_object_or_404(Rayon, pk=self.kwargs['pkR'])
+        produit = get_object_or_404(Produit, pk=self.kwargs['pk'])
+        return get_object_or_404(Contenir, rayon=rayon, produit=produit)
+
     def form_valid(self, form):
         rayon = get_object_or_404(Rayon, pk=self.kwargs['pkR'])
-        produit = get_object_or_404(Produit, pk=self.kwargs['pkP'])
+        produit = get_object_or_404(Produit, pk=self.kwargs['pk'])
         contenir = form.save(commit=False)
         contenir.produit = produit
         contenir.rayon = rayon
+        if contenir.Qte == 0:
+            return redirect('cntnr_del', pkR=rayon.idRayon, pk=produit.refProd)
+        
         contenir.save()
         return redirect('dtl_rayon', pk=rayon.idRayon)
+    
+    
+@method_decorator(login_required, name='dispatch')
+class ContenirDeleteView(DeleteView):
+    model = Contenir
+    template_name = "monApp/delete_contenir.html"
+
+    def get_object(self, queryset=None):
+        rayon = get_object_or_404(Rayon, pk=self.kwargs['pkR'])
+        produit = get_object_or_404(Produit, pk=self.kwargs['pk'])
+        return get_object_or_404(Contenir, rayon=rayon, produit=produit)
+
+    def get_success_url(self):
+        rayon = get_object_or_404(Rayon, pk=self.kwargs['pkR'])
+        return reverse_lazy('dtl_rayon', kwargs={'pk': rayon.pk})
+
+
+
+
 
 
 
