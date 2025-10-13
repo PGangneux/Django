@@ -16,7 +16,6 @@ from django.contrib.auth.decorators import login_required
 
 
 
-
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
 
